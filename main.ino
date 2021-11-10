@@ -9,7 +9,6 @@
 
 #define LCD_RESET A4
 
-// Color definitions
 #define BLACK 0x0000
 #define WHITE 0xFFFF
 
@@ -18,14 +17,8 @@
 #define YM 8
 #define XP 9
 
-#define TS_MINX 130
-#define TS_MAXX 905
-
-#define TS_MINY 75
-#define TS_MAXY 930
-
-#define STATUS_X 10
-#define STATUS_Y 65
+#define MINPRESSURE 10
+#define MAXPRESSURE 1000
 
 int relay = 53;
 bool light = false;
@@ -59,9 +52,6 @@ void setup(void) {
   pinMode(53  , OUTPUT);
 }
 
-#define MINPRESSURE 10
-#define MAXPRESSURE 1000
-
 void loop(void) {
   digitalWrite(13, HIGH);
   TSPoint p = ts.getPoint();
@@ -69,16 +59,6 @@ void loop(void) {
 
   pinMode(XM, OUTPUT);
   pinMode(YP, OUTPUT);
-
-
-  if (p.z > MINPRESSURE && p.z < MAXPRESSURE)
-  {
-    p.x = p.x + p.y;
-    p.y = p.x - p.y;
-    p.x = p.x - p.y;
-    p.x = map(p.x, TS_MINX, TS_MAXX, tft.width(), 0);
-    p.y = tft.height() - (map(p.y, TS_MINY, TS_MAXY, tft.height(), 0));
-  }
 
   if (p.z != 0) {
     if (light == true) {
